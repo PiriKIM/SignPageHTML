@@ -10,18 +10,22 @@
 	<!--<meta name="viewport" content="width=device-width, initial-scale=1"> 반응형웹을 위한 @media를 사용하기위한 태그-->
 	<style>
 		#signArea {
-			align-content: center;
-			background-color: lightsalmon;
+			padding-top: 0;
+			padding-bottom: 15px;
 		}
 		body {
 			text-align: center;
 		}
 		button { 
-			margin: 10px;
+			margin-top: 0;
+			margin-bottom: 15px;
 		}
 	</style>
 </head>
 <body>
+	<div>
+		<h3>전자 서명 만들기</h3>
+	</div>
 	<!-- 서명 공간 -->
 	<div id="signArea">
 		<canvas id="canvas" style="border:1px solid black"></canvas>
@@ -48,8 +52,16 @@
 					function canvasResize() {						
 						var signAreaWidth = window.innerWidth;
 						var signAreaHeight = window.innerHeight;
-						canvas[0].width = 300;
-						canvas[0].height = 150;
+						if (signAreaWidth > 900) {
+							canvas[0].width = 500;
+							canvas[0].height = 250;
+						} else if (signAreaWidth > 300) {
+							canvas[0].width = 300;
+							canvas[0].height = 150;
+						} else {
+							canvas[0].width = signAreaWidth;
+							canvas[0].height = 0.5 * signAreaWidth;
+						}
 					}
 					// pc에서 서명을 할 경우 사용되는 이벤트입니다.
 					function draw(e) {
