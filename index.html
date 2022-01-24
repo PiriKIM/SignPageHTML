@@ -4,28 +4,33 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 	<title>전자 서명 페이지</title>
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<!--<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js">//최신버전 jquery를 불러오는 링크</script>-->
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js">//PDF파일 생성 라이브러리</script>
 	<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js">//페이지 구역을 Canvas 객체로 바꿔주는 라이브러리</script>
+	<!--<meta name="viewport" content="width=device-width, initial-scale=1"> 반응형웹을 위한 @media를 사용하기위한 태그-->
 	<style>
-		#save { 
-			margin: 10px;
+		#signArea {
+			align-content: center;
+			background-color: lightsalmon;
 		}
-		#save_PDF {
+		body {
+			text-align: center;
+		}
+		button { 
 			margin: 10px;
 		}
 	</style>
 </head>
 <body>
 	<!-- 서명 공간 -->
-	<div style="width:300px; height:300px;">
+	<div id="signArea">
 		<canvas id="canvas" style="border:1px solid black"></canvas>
 	</div>
-	<div><p>서명을 새로 하려면 새로고침을 누르세요.</p></div>
 	<div>
 		<!-- 저장 버튼 -->
-		<button id="save">PNG 파일로 저장</button>
-		<button id="save_PDF">PDF 파일로 저장</button>
+		<button id="save">PNG 파일로 저장</button><br>
+		<button id="save_PDF">PDF 파일로 저장</button><br />
+		<button id="clear_New">서명 새로 쓰기</button>
 		<div>
 			<script>
 				(function (obj) {
@@ -38,10 +43,16 @@
 					var ctx = canvas[0].getContext("2d");
 					var drawble = false;
 
-					// 이제 html 버그인지는 모르겠는데 canvas의 style의 height와 width를 수정하게 되면 그림이 이상하게 그려집니다.
+					// canvas의 style의 height와 width를 수정하게 되면 그림이 이상하게 그려집니다.
+					// canvas 자체의 크기를 수정하면 정상 작동합니다.
 					function canvasResize() {
-						canvas[0].height = div.height();
-						canvas[0].width = div.width();
+						var sa = document.getElementById("signArea");
+						var signAreaWidth = window.innerWidth;
+						var signAreaHeight = window.innerHeight;
+						sa.style.width = signAreaWidth;
+						sa.style.height = signAreaHeight;
+						canvas[0].height = 0.5*signAreaHeight;
+						canvas[0].width = 0.5 * signAreaHeight;
 					}
 					// pc에서 서명을 할 경우 사용되는 이벤트입니다.
 					function draw(e) {
@@ -145,9 +156,13 @@
 									doc.save('MySign.pdf'); //pdf저장
 								});
 							});
+							$('#clear_New').click(function () {
+								//canvas 클리어 - 초기화
+								window.location.reload(true);
+							});
 						},
 						onLoad: function () {
-							// 캔버스 사이즈 조절
+							//캔버스 사이즈 조절
 							canvasResize();
 						}
 					}
